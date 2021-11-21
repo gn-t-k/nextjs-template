@@ -12,6 +12,7 @@
     "postinstall": "npx typesync"
   },
   "dependencies": {
+    "ky": "^0.28.7",
     "modern-css-reset": "^1.4.0",
     "next": "12.0.4",
     "react": "17.0.2",
