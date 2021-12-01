@@ -12,39 +12,36 @@ questions:
 ```tsx
 import styles from "./index.module.css";
 
-type DOMProps = {
-}
-
-export const DOM = ({}: DOMProps): JSX.Element => (
-)
-
 type Props = {
-} & DOMProps
-
-const {{ inputs.component | pascal }} = ({}: Props): JSX.Element => {
-  return <DOM />
 }
 
-export default {{ inputs.component | pascal }}
+export const {{ inputs.component | pascal }} = ({}: Props): JSX.Element => {
+  return <p className={styles['sample-text']}>example</p>
+}
+
 ```
 
 # `{{ inputs.component | kebab }}/index.module.css`
 
 ```css
+.sample-text {
+  color: black;
+}
+
 ```
 
 # `{{ inputs.component | kebab }}/index.stories.tsx`
 
 ```tsx
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import { DOM } from ".";
+import { {{ inputs.component | pascal }} } from ".";
 
 export default {
   title: "{{output.dir | replace "src\/components\/presenter\/" ""}}",
-  component: DOM,
-} as ComponentMeta<typeof DOM>;
+  component: {{ inputs.component | pascal }},
+} as ComponentMeta<typeof {{ inputs.component | pascal }}>;
 
-const TemplateStory: ComponentStory<typeof DOM> = (props) => <DOM {...props} />;
+const TemplateStory: ComponentStory<typeof {{ inputs.component | pascal }}> = (props) => <{{ inputs.component | pascal }} {...props} />;
 
 export const Default = TemplateStory.bind({});
 Default.args = {
