@@ -1,34 +1,105 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Next.jsのテンプレート
 
-## Getting Started
+## コンセプト
 
-First, run the development server:
+### Storybookを軸にコンポーネントを開発する
 
-```bash
-npm run dev
-# or
-yarn dev
+コンポーネントをcontainerとpresenterに分離することで、副作用を局所化する。
+
+### 型安全にコンポーネントを開発する
+
+外部APIとの通信時は、必ず型ガードを利用する。
+
+### コンポーネントの分類を簡潔にする
+
+コンポーネントを新規に作成する時や、既存のコンポーネントから目的のコンポーネントを探す時に、開発者が迷わないような構成にする。
+
+### ライブラリ・フレームワークのリプレースをできるだけ容易にする
+
+ライブラリ・フレームワークの機能による実装は特定のディレクトリに分離して、別で定義したインターフェイスをもとに実装する。
+
+### 上記のコンセプトを実現するために必要な退屈な作業は、scaffoldを利用して極力自動化する
+
+コンポーネントの雛形、storybookの雛形、型ガード生成の自動化など。
+
+## ディレクトリ構成
+
+```plain text
+src
+├── api
+│   └── [api name]
+│       ├── request.ts
+│       ├── response.ts
+│       └── index.interface.ts
+├── component
+│   ├── hooks
+│   ├── container
+│   │   └── [container component name]
+│   │       ├── hooks
+│   │       └── index.tsx
+│   ├── function
+│   │   └── [function component name]
+│   │       ├── hooks
+│   │       └── index.tsx
+│   └── presenter
+│       ├── data-display
+│       │   └── [presentational component name]
+│       │       ├── hooks
+│       │       ├── index.module.css
+│       │       ├── index.stories.tsx
+│       │       └── index.tsx
+│       ├── data-entry
+│       │   └── [presentational component name]
+│       ├── feedback
+│       │   └── [presentational component name]
+│       ├── general
+│       │   └── [presentational component name]
+│       ├── navigation
+│       │   └── [presentational component name]
+│       ├── other
+│       │   └── [presentational component name]
+│       └── template
+│           └── [presentational component name] or more nest
+└── lib
+    └── [library name]
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### `api`
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+外部APIなどのインターフェイスを置く。
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+たとえば外部APIとの通信の処理は、以下のような構成になる。
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+- `api`でインターフェイスを書く
+- `lib`でインターフェイスを実装する
+- `component`配下のカスタムフック等で実装を利用する
 
-## Learn More
+`yarn scaffold:api`で雛形を自動生成する。
 
-To learn more about Next.js, take a look at the following resources:
+### `component`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+JSX（+cssなどによるスタイリング）とカスタムフックを置く。
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+`hooks`ディレクトリ内のカスタムフックは、そのディレクトリかそれより下のディレクトリのコンポーネントから利用される。
 
-## Deploy on Vercel
+#### `presenter`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+副作用（外部との通信、Contextとの接続など）がないコンポーネントを置く。
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+（外部から取得した）値を表示するためのコンポーネントは`data-display`、値を入力するためのコンポーネントは`data-entry`など、利用目的に応じてコンポーネントを配置するディレクトリを選ぶ（[Ant DesignのComponents Overview](https://ant.design/components/overview/)を参照）。`template`には、複数の`presenter`コンポーネントを組み合わせたコンポーネントを置く。`template`内のディレクトリ構成についてはプロジェクトによって要検討。
+
+`yarn scaffold:presenter`で雛形を自動生成する。
+
+#### `container`
+
+副作用（外部との通信、Contextとの接続など）がある処理を行い、処理の結果もしくは処理のトリガーを`presenter`のコンポーネントに渡す。
+
+`yarn scaffold:container`で雛形を自動生成する。
+
+#### `function`
+
+`Context.Provider`など、見た目を持たないコンポーネントを置く。
+
+### `lib`
+
+axiosやfirebaseなどのライブラリを使用する処理はここで書く。
