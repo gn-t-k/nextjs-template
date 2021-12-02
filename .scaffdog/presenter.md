@@ -1,8 +1,8 @@
 ---
 name: 'presenter'
-root: 'src/components/presenter'
+root: 'src/component/presenter'
 output: '*'
-ignore: []
+ignore: ['src/component/presenter']
 questions:
   component: 'Please enter component name.'
 ---
@@ -37,7 +37,7 @@ import { ComponentMeta, ComponentStory } from "@storybook/react";
 import { {{ inputs.component | pascal }} } from ".";
 
 export default {
-  title: "{{output.dir | replace "src\/components\/presenter\/" ""}}",
+  title: "{{output.dir | replace "src\/component\/presenter\/" ""}}",
   component: {{ inputs.component | pascal }},
 } as ComponentMeta<typeof {{ inputs.component | pascal }}>;
 

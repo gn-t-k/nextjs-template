@@ -1,6 +1,6 @@
 ---
 name: 'container'
-root: 'src/components/container'
+root: 'src/component/container'
 output: '.'
 ignore: []
 questions:

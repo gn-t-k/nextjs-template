@@ -12,6 +12,7 @@
     "type-guard": "yarn run type-predicates-generator -f $npm_config_f -o $npm_config_o",
     "scaffold:presenter": "yarn run scaffdog generate presenter",
     "scaffold:container": "yarn run scaffdog generate container",
+    "scaffold:api": "yarn run scaffdog generate api",
     "postinstall": "npx typesync"
   },
   "dependencies": {
