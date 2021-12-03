@@ -9,9 +9,9 @@ export const parameters = {
       color: /(background|color)$/i,
       date: /Date$/,
     },
-    nextRouter: {
-      Provider: RouterContext.Provider,
-    },
+  },
+  nextRouter: {
+    Provider: RouterContext.Provider,
   },
 };
 
